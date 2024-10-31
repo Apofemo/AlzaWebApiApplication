@@ -8,12 +8,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="DatabaseObjects\" />
       <Folder Include="Repositories\" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\AlzaApp.Domain\AlzaApp.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     </ItemGroup>
 
 </Project>
