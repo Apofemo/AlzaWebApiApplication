@@ -18,6 +18,6 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbC
                     .HasDefaultValue(DateTimeOffset.MinValue);
 
         modelBuilder.Entity<ProductDo>()
-                    .HasData(MockedData.GetMockedProducts());
+                    .HasData(SeedData.SeedProducts);
     }
 }
