@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AlzaApp.Persistence;
 
-public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public DbSet<ProductDo> Products { get; private set; }
+    internal DbSet<ProductDo> Products { get; private set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

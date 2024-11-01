@@ -1,3 +1,5 @@
+using AlzaApp.Domain.Interfaces;
+using AlzaApp.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +14,10 @@ public static class DependencyInjector
         {
             options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"));
         });
+
+        services.AddAutoMapper(typeof(MappingProfile));
+
+        services.AddScoped<IProductsRepository, ProductsRepository>();
 
         return services;
     }

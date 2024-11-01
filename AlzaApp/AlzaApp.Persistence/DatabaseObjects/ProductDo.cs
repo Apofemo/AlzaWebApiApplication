@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AlzaApp.Persistence.DatabaseObjects;
 
 [Table("Products")]
-public sealed record ProductDo()
+internal sealed record ProductDo()
 {
     [Key]
     public required int Id { get; init; }
