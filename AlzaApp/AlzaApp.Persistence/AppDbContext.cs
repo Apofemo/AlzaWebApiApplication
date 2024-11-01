@@ -12,5 +12,14 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbC
         modelBuilder.Entity<ProductDo>()
                     .Property(p => p.Price)
                     .HasColumnType("decimal(18,2)");
+        
+        modelBuilder.Entity<ProductDo>()
+                    .Property(p => p.UpdatedAt)
+                    .HasDefaultValue(DateTimeOffset.MinValue);
+
+#if DEBUG
+        modelBuilder.Entity<ProductDo>()
+                    .HasData(MockedData.GetMockedProducts());
+#endif
     }
 }
