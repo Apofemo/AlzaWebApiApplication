@@ -14,7 +14,9 @@ internal class ProductsRepository(
     public async Task<IEnumerable<Product>> GetAllProductsAsync()
     {
         logger.LogInformation("Fetching all products from the database.");
-        var products = await dbContext.Products.AsNoTracking().ToListAsync();
+        var products = await dbContext.Products
+                                      .AsNoTracking()
+                                      .ToListAsync();
 
         if (products.Count == 0)
         {
@@ -29,10 +31,11 @@ internal class ProductsRepository(
     public async Task<IEnumerable<Product>> GetAllProductsPaginatedAsync(int page, int pageSize = 10)
     {
         logger.LogInformation("Fetching products from the database for page '{Page}' with page size '{PageSize}'.", page, pageSize);
-        var products = await dbContext.Products.AsNoTracking()
-                                       .Skip((page - 1) * pageSize)
-                                       .Take(pageSize)
-                                       .ToListAsync();
+        var products = await dbContext.Products
+                                      .AsNoTracking()
+                                      .Skip((page - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToListAsync();
 
         if (products.Count == 0)
         {
@@ -47,7 +50,9 @@ internal class ProductsRepository(
     public async Task<Product> GetProductByIdAsync(int id)
     {
         logger.LogInformation("Fetching product with ID '{Id}' from the database.", id);
-        var product = await dbContext.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+        var product = await dbContext.Products
+                                     .AsNoTracking()
+                                     .FirstOrDefaultAsync(p => p.Id == id);
 
         if (product is null)
         {
@@ -62,7 +67,8 @@ internal class ProductsRepository(
     public async Task<Product> UpdateDescriptionAsync(int id, string description)
     {
         logger.LogInformation("Updating description for product with ID '{Id}'.", id);
-        var product = await dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
+        var product = await dbContext.Products
+                                     .FirstOrDefaultAsync(p => p.Id == id);
 
         if (product is null)
         {
@@ -70,7 +76,10 @@ internal class ProductsRepository(
             return Product.Empty;
         }
 
-        product = product with { Description = description };
+        product.Description = description;
+        product.UpdatedAt = DateTimeOffset.UtcNow;
+        
+        dbContext.Products.Update(product);
         await dbContext.SaveChangesAsync();
 
         logger.LogInformation("Successfully updated description for product with ID '{Id}'.", id);

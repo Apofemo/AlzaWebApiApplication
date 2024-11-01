@@ -17,9 +17,7 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbC
                     .Property(p => p.UpdatedAt)
                     .HasDefaultValue(DateTimeOffset.MinValue);
 
-#if DEBUG
         modelBuilder.Entity<ProductDo>()
                     .HasData(MockedData.GetMockedProducts());
-#endif
     }
 }

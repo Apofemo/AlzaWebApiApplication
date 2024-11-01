@@ -12,7 +12,7 @@ public sealed record Product
     {
         Id = -1,
         Name = string.Empty,
-        ImgUri = new Uri(string.Empty),
+        ImgUri = new Uri("about:blank"),
         Price = 0.0m,
         Description = string.Empty
     };
