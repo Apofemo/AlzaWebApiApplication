@@ -1,7 +1,13 @@
+using AlzaApp.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddLogging();
+
+builder.Services.InjectPersistenceDependencies(builder.Configuration);
 
 var app = builder.Build();
 
