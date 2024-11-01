@@ -1,11 +1,12 @@
 using AlzaApp.Domain.DomainEntities;
+using FluentResults;
 
 namespace AlzaApp.Domain.Interfaces;
 
 public interface IProductsRepository
 {
-    Task<IEnumerable<Product>> GetAllProductsAsync();
-    Task<IEnumerable<Product>> GetAllProductsPaginatedAsync(int page, int pageSize = 10);
-    Task<Product> GetProductByIdAsync(int id);
-    Task<Product> UpdateDescriptionAsync(int id, string description);
+    Task<Result<IEnumerable<Product>>> GetAllProductsAsync();
+    Task<Result<IEnumerable<Product>>> GetAllProductsPaginatedAsync(int page, int pageSize = 10);
+    Task<Result<Product>> GetProductByIdAsync(int id);
+    Task<Result<Product>> UpdateDescriptionAsync(int id, string description);
 }
