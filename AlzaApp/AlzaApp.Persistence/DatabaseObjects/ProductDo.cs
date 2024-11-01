@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AlzaApp.Persistence.DatabaseObjects;
 
 [Table("Products")]
-public sealed record ProductDo()
+public sealed record ProductDo
 {
     [Key]
     public required int Id { get; init; }
@@ -19,4 +19,9 @@ public sealed record ProductDo()
     public required decimal Price { get; init; }
     
     public string Description { get; init; } = string.Empty;
+
+    [Required] 
+    public DateTimeOffset CreatedAt { get; init; }
+    
+    public DateTimeOffset UpdatedAt { get; init; }
 }
