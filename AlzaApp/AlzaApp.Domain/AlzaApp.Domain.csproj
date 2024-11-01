@@ -9,10 +9,10 @@
 
     <ItemGroup>
       <Folder Include="DataTransferObjects\" />
-      <Folder Include="Interfaces\" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="13.0.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
     </ItemGroup>
 

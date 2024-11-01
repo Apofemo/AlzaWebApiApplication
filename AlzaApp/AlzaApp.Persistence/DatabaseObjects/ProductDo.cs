@@ -4,24 +4,27 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AlzaApp.Persistence.DatabaseObjects;
 
 [Table("Products")]
-public sealed record ProductDo
+internal sealed class ProductDo
 {
     [Key]
     public required int Id { get; init; }
     
     [Required]
-    public required string Name { get; init; }
+    [StringLength(200)]
+    public required string Name { get; set; }
     
     [Required]
-    public required string ImgUri { get; init; }
+    [StringLength(500)]
+    public required string ImgUri { get; set; }
     
     [Required]
-    public required decimal Price { get; init; }
+    public required decimal Price { get; set; } 
     
-    public string Description { get; init; } = string.Empty;
+    [StringLength(1000)]
+    public string Description { get; set; } = string.Empty;
 
     [Required] 
     public DateTimeOffset CreatedAt { get; init; }
     
-    public DateTimeOffset UpdatedAt { get; init; }
+    public DateTimeOffset UpdatedAt { get; set; }
 }
