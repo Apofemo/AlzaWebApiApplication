@@ -19,7 +19,6 @@ internal abstract class BaseRepositoryTest
         ServiceProvider = new ServiceCollection()
                           .AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("TestDatabase"))
                           .AddAutoMapper(typeof(MappingProfile))
-                          .AddLogging()
                           .AddTransient<IProductsRepository, ProductsRepository>()
                           .BuildServiceProvider();
         

@@ -21,4 +21,7 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="AlzaApp.Test"/>
+    </ItemGroup>
 </Project>
