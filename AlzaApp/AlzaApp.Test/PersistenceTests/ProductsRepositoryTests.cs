@@ -1,3 +1,4 @@
+using AlzaApp.Domain.DomainEntities.Errors.Persistence;
 using AlzaApp.Domain.Interfaces;
 using AlzaApp.Test.Mocks.Persistence;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +18,7 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
     public async Task GetAllProductsAsync_ReturnsAllProducts()
     {
         // Arrange
-        await DbContext.Products.AddRangeAsync(MockedData.Products);
+        await DbContext.Products.AddRangeAsync(MockedData.ProductsDo);
         await DbContext.SaveChangesAsync();
 
         // Act
@@ -28,9 +29,9 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
         
         var products = result.Value.ToList();
         
-        Assert.That(products.Count, Is.EqualTo(MockedData.Products.Count));
-        Assert.That(products.First().Id, Is.EqualTo(MockedData.Products.First().Id));
-        Assert.That(products.Last().Id, Is.EqualTo(MockedData.Products.Last().Id));
+        Assert.That(products.Count, Is.EqualTo(MockedData.ProductsDo.Count));
+        Assert.That(products.First().Id, Is.EqualTo(MockedData.ProductsDo.First().Id));
+        Assert.That(products.Last().Id, Is.EqualTo(MockedData.ProductsDo.Last().Id));
     }
 
     [Test]
@@ -41,17 +42,19 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductsFoundError.Create()));
     }
 
     [Test]
     public async Task GetAllProductsPaginatedAsync_ReturnsCorrectPageOfProducts()
     {
         // Arrange
-        DbContext.Products.AddRange(MockedData.Products);
+        DbContext.Products.AddRange(MockedData.ProductsDo);
         await DbContext.SaveChangesAsync();
 
-        var page = 1;
-        var pageSize = 5;
+        const int page = 1;
+        const int pageSize = 5;
 
         // Act
         var result = await ProductsRepository.GetAllProductsPaginatedAsync(page, pageSize);
@@ -62,17 +65,17 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
         var products = result.Value.ToList();
         
         Assert.That(products.Count, Is.EqualTo(pageSize));
-        Assert.That(products.Last().Id, Is.EqualTo(MockedData.Products[pageSize - 1].Id));
+        Assert.That(products.Last().Id, Is.EqualTo(MockedData.ProductsDo[pageSize - 1].Id));
     }
     
     [Test]
     public async Task GetAllProductsPaginatedAsync_ReturnsCorrectPageOfProducts_DefaultPageSize()
     {
         // Arrange
-        DbContext.Products.AddRange(MockedData.Products);
+        DbContext.Products.AddRange(MockedData.ProductsDo);
         await DbContext.SaveChangesAsync();
 
-        var page = 1;
+        const int page = 1;
 
         // Act
         var result = await ProductsRepository.GetAllProductsPaginatedAsync(page);
@@ -83,24 +86,26 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
         var products = result.Value.ToList();
         
         Assert.That(products.Count, Is.EqualTo(10));
-        Assert.That(products.Last().Id, Is.EqualTo(MockedData.Products[9].Id));
+        Assert.That(products.Last().Id, Is.EqualTo(MockedData.ProductsDo[9].Id));
     }
 
     [Test]
     public async Task GetAllProductsPaginatedAsync_ReturnsFailure_WhenPageIsOutOfRange()
     {
         // Arrange
-        DbContext.Products.AddRange(MockedData.Products);
+        DbContext.Products.AddRange(MockedData.ProductsDo);
         await DbContext.SaveChangesAsync();
 
-        var page = 2;
-        var pageSize = MockedData.Products.Count;
+        const int page = 2;
+        var pageSize = MockedData.ProductsDo.Count;
 
         // Act
         var result = await ProductsRepository.GetAllProductsPaginatedAsync(page, pageSize);
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductsFoundError.Create()));
     }
 
     [Test]
@@ -111,16 +116,18 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductsFoundError.Create()));
     }
 
     [Test]
     public async Task GetProductByIdAsync_ReturnsProduct_WhenProductExists()
     {
         // Arrange
-        await DbContext.Products.AddRangeAsync(MockedData.Products);
+        await DbContext.Products.AddRangeAsync(MockedData.ProductsDo);
         await DbContext.SaveChangesAsync();
 
-        var productId = 3;
+        const int productId = 3;
 
         // Act
         var result = await ProductsRepository.GetProductByIdAsync(productId);
@@ -134,43 +141,47 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
     public async Task GetProductByIdAsync_ReturnsFailure_WhenProductDoesNotExist()
     {
         // Arrange
-        await DbContext.Products.AddRangeAsync(MockedData.Products);
+        await DbContext.Products.AddRangeAsync(MockedData.ProductsDo);
         await DbContext.SaveChangesAsync();
 
-        var productId = MockedData.Products.Count + 1;
+        var productId = MockedData.ProductsDo.Count + 1;
 
         // Act
         var result = await ProductsRepository.GetProductByIdAsync(productId);
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductWithIdFoundError.Create(productId)));
     }
 
     [Test]
     public async Task GetProductByIdAsync_ReturnsFailure_WhenIdIsNegative()
     {
         // Arrange
-        await DbContext.Products.AddRangeAsync(MockedData.Products);
+        await DbContext.Products.AddRangeAsync(MockedData.ProductsDo);
         await DbContext.SaveChangesAsync();
 
-        var productId = -1;
+        const int productId = -1;
 
         // Act
         var result = await ProductsRepository.GetProductByIdAsync(productId);
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductWithIdFoundError.Create(productId)));
     }
 
     [Test]
     public async Task UpdateDescriptionAsync_UpdatesDescription_WhenProductExists()
     {
         // Arrange
-        await DbContext.Products.AddRangeAsync(MockedData.Products);
+        await DbContext.Products.AddRangeAsync(MockedData.ProductsDo);
         await DbContext.SaveChangesAsync();
 
-        var productId = 3;
-        var newDescription = "New Description";
+        const int productId = 3;
+        const string newDescription = "New Description";
 
         // Act
         var result = await ProductsRepository.UpdateDescriptionAsync(productId, newDescription);
@@ -178,40 +189,44 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
         // Assert
         Assert.That(result.IsSuccess, Is.True);
         Assert.That(result.Value.Description, Is.EqualTo(newDescription));
-        Assert.That(result.Value.UpdatedAt, Is.Not.EqualTo(MockedData.Products[productId - 1].UpdatedAt));
+        Assert.That(result.Value.UpdatedAt, Is.Not.EqualTo(MockedData.ProductsDo[productId - 1].UpdatedAt));
     }
 
     [Test]
     public async Task UpdateDescriptionAsync_ReturnsFailure_WhenProductDoesNotExist()
     {
         // Arrange
-        await DbContext.Products.AddRangeAsync(MockedData.Products);
+        await DbContext.Products.AddRangeAsync(MockedData.ProductsDo);
         await DbContext.SaveChangesAsync();
 
-        var productId = MockedData.Products.Count + 1;
-        var newDescription = "New Description";
+        var productId = MockedData.ProductsDo.Count + 1;
+        const string newDescription = "New Description";
 
         // Act
         var result = await ProductsRepository.UpdateDescriptionAsync(productId, newDescription);
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductWithIdFoundError.Create(productId)));
     }
 
     [Test]
     public async Task UpdateDescriptionAsync_ReturnsFailure_WhenIdIsNegative()
     {
         // Arrange
-        await DbContext.Products.AddRangeAsync(MockedData.Products);
+        await DbContext.Products.AddRangeAsync(MockedData.ProductsDo);
         await DbContext.SaveChangesAsync();
 
-        var productId = -1;
-        var newDescription = "New Description";
+        const int productId = -1;
+        const string newDescription = "New Description";
 
         // Act
         var result = await ProductsRepository.UpdateDescriptionAsync(productId, newDescription);
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductWithIdFoundError.Create(productId)));
     }
 }
