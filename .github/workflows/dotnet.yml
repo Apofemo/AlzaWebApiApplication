@@ -3,8 +3,6 @@ name: Build&Publish
 on:
   push:
     branches: [ "main", "develop" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
@@ -20,23 +18,23 @@ jobs:
         dotnet-version: 8.0.x
         
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ./AlzaApp
 
     - name: Replace secrets in the configuration
       run: |
         sed -i 's/{DATABASE_CONNECTION_STRING}/${{ secrets.DATABASE_CONNECTION_STRING }}/g' ./AlzaApp/AlzaApp.API/appsettings.json
       
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build ./AlzaApp --configuration Release --no-restore
       
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ./AlzaApp --verbosity normal
 
     - name: Publish
-      run: dotnet publish -c Release -o ./publish
+      run: dotnet publish ./AlzaApp -c Release -o ./publish
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.4.3
       with:
-        name: published-app
+        name: AlzaApp
         path: ./publish
