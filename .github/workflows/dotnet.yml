@@ -1,0 +1,42 @@
+name: Build&Publish
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Replace secrets in the configuration
+      run: |
+        sed -i 's/{DATABASE_CONNECTION_STRING}/${{ secrets.DATABASE_CONNECTION_STRING }}/g' ./AlzaApp/AlzaApp.API/appsettings.json
+      
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+      
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+
+    - name: Publish
+      run: dotnet publish -c Release -o ./publish
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: published-app
+        path: ./publish
