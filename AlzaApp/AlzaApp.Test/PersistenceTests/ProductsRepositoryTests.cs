@@ -1,3 +1,4 @@
+using AlzaApp.Domain.DomainEntities.Errors.Persistence;
 using AlzaApp.Domain.Interfaces;
 using AlzaApp.Test.Mocks.Persistence;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +42,8 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductsFoundError.Create()));
     }
 
     [Test]
@@ -101,6 +104,8 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductsFoundError.Create()));
     }
 
     [Test]
@@ -111,6 +116,8 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductsFoundError.Create()));
     }
 
     [Test]
@@ -144,6 +151,8 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductWithIdFoundError.Create(productId)));
     }
 
     [Test]
@@ -160,6 +169,8 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductWithIdFoundError.Create(productId)));
     }
 
     [Test]
@@ -196,6 +207,8 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductWithIdFoundError.Create(productId)));
     }
 
     [Test]
@@ -213,5 +226,7 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(NoProductWithIdFoundError.Create(productId)));
     }
 }

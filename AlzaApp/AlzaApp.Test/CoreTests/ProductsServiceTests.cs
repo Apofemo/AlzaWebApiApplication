@@ -1,5 +1,6 @@
 using AlzaApp.Core.Interfaces;
 using AlzaApp.Domain.DataTransferObjects;
+using AlzaApp.Domain.DomainEntities.Errors.Core;
 using AlzaApp.Test.Mocks.Core;
 using FluentResults;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,6 +46,7 @@ internal sealed class ProductsServiceTests : BaseCoreTest
         
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
     }
     
     [Test]
@@ -83,6 +85,7 @@ internal sealed class ProductsServiceTests : BaseCoreTest
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
     }
 
     [Test]
@@ -119,6 +122,7 @@ internal sealed class ProductsServiceTests : BaseCoreTest
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
     }
 
     [Test]
@@ -162,5 +166,43 @@ internal sealed class ProductsServiceTests : BaseCoreTest
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
+    }
+
+    [Test]
+    public async Task UpdateDescriptionAsync_ReturnsFailure_WhenDescriptionIsEmpty()
+    {
+        // Arrange
+        const int productId = 3;
+        var newDescription = string.Empty;
+        
+        ProductsRepositoryMock.Setup(repo => repo.UpdateDescriptionAsync(productId, newDescription))
+                              .ReturnsAsync(Result.Fail(string.Empty));
+
+        // Act
+        var result = await ProductsService.UpdateDescriptionAsync(productId, newDescription);
+
+        // Assert
+        Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(DescriptionIsEmptyError.Create()));
+    }
+    
+    [Test]
+    public async Task UpdateDescriptionAsync_ReturnsFailure_WhenDescriptionIsTooLong()
+    {
+        // Arrange
+        const int productId = 3;
+        var newDescription = new string('a', 1001);
+        
+        ProductsRepositoryMock.Setup(repo => repo.UpdateDescriptionAsync(productId, newDescription))
+                              .ReturnsAsync(Result.Fail(string.Empty));
+
+        // Act
+        var result = await ProductsService.UpdateDescriptionAsync(productId, newDescription);
+
+        // Assert
+        Assert.That(result.IsFailed, Is.True);
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors.First(), Is.EqualTo(DescriptionIsTooLongError.Create()));
     }
 }
