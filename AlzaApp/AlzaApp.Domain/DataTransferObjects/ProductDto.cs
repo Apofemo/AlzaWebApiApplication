@@ -7,13 +7,4 @@ public sealed record ProductDto
     public required Uri ImgUri { get; init; }
     public required decimal Price { get; init; }
     public string Description { get; init; } = string.Empty;
-    
-    public static ProductDto Empty => new()
-    {
-        Id = -1,
-        Name = string.Empty,
-        ImgUri = new Uri("about:blank"),
-        Price = 0.0m,
-        Description = string.Empty,
-    };
 }
