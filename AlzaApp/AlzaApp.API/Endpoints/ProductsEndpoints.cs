@@ -2,9 +2,9 @@ using AlzaApp.Core.Interfaces;
 
 namespace AlzaApp.API.Endpoints;
 
-public static class ProductsEndpoints
+internal static class ProductsEndpoints
 {
-    public static void MapProductEndpoints(this IEndpointRouteBuilder app)
+    internal static void MapProductEndpoints(this IEndpointRouteBuilder app)
     {
     // Version 1
         app.MapGet("products", async (IProductsService productService) =>

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AlzaApp.Persistence.Repositories;
 
-internal class ProductsRepository(
+internal sealed class ProductsRepository(
     AppDbContext dbContext, 
     IMapper mapper) : IProductsRepository
 {
