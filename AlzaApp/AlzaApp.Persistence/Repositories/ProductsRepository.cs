@@ -1,4 +1,5 @@
 using AlzaApp.Domain.DomainEntities;
+using AlzaApp.Domain.DomainEntities.Errors.Persistence;
 using AlzaApp.Domain.Interfaces;
 using AutoMapper;
 using FluentResults;
@@ -17,7 +18,7 @@ internal class ProductsRepository(
                                       .ToListAsync();
 
         return products.Count == 0 
-            ? Result.Fail("No products found.") 
+            ? Result.Fail(NoProductsFoundError.Create()) 
             : Result.Ok(mapper.Map<IEnumerable<Product>>(products));
     }
 
@@ -30,7 +31,7 @@ internal class ProductsRepository(
                                       .ToListAsync();
 
         return products.Count == 0 
-            ? Result.Fail("No products found.") 
+            ? Result.Fail(NoProductsFoundError.Create()) 
             : Result.Ok(mapper.Map<IEnumerable<Product>>(products));
     }
 
@@ -41,7 +42,7 @@ internal class ProductsRepository(
                                      .FirstOrDefaultAsync(p => p.Id == id);
 
         return product is null 
-            ? Result.Fail($"Product with ID '{id}' not found.") 
+            ? Result.Fail(NoProductWithIdFoundError.Create(id)) 
             : Result.Ok(mapper.Map<Product>(product));
     }
 
@@ -51,7 +52,7 @@ internal class ProductsRepository(
                                      .FirstOrDefaultAsync(p => p.Id == id);
 
         if (product is null)
-            return Result.Fail($"Product with ID '{id}' not found");
+            return Result.Fail(NoProductWithIdFoundError.Create(id));
 
         product.Description = description;
         product.UpdatedAt = DateTimeOffset.UtcNow;

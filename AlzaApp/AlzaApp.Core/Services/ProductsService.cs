@@ -1,5 +1,6 @@
 using AlzaApp.Core.Interfaces;
 using AlzaApp.Domain.DataTransferObjects;
+using AlzaApp.Domain.DomainEntities.Errors.Core;
 using AlzaApp.Domain.Interfaces;
 using AutoMapper;
 using FluentResults;
@@ -60,6 +61,19 @@ internal sealed class ProductsService(
     public async Task<Result<ProductDto>> UpdateDescriptionAsync(int id, string description)
     {
         logger.LogInformation("Updating description for product with ID '{Id}'.", id);
+        
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            logger.LogError("Failed to update description for product with ID '{Id}': Description is empty.", id);
+            return Result.Fail(DescriptionIsEmptyError.Create());
+        }
+        
+        if (description.Length > 1000)
+        {
+            logger.LogError("Failed to update description for product with ID '{Id}': Description is too long.", id);
+            return Result.Fail(DescriptionIsTooLongError.Create());
+        }
+        
         var productResult = await productsRepository.UpdateDescriptionAsync(id, description);
 
         if (productResult.IsFailed)
