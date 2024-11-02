@@ -1,3 +1,4 @@
+using AlzaApp.API.Endpoints;
 using AlzaApp.Core;
 using AlzaApp.Persistence;
 
@@ -13,6 +14,8 @@ builder.Services
        .InjectPersistenceDependencies(builder.Configuration);
 
 var app = builder.Build();
+
+app.MapProductEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
