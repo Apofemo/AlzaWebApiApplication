@@ -6,8 +6,8 @@ public sealed record NoProductWithIdFoundError : IError
 {
     public string Message { get; private init; } = string.Empty;
     
-    public Dictionary<string, object> Metadata => new();
-    public List<IError> Reasons => new();
+    public Dictionary<string, object> Metadata => [];
+    public List<IError> Reasons => [];
     
     public static NoProductWithIdFoundError Create(int id) => new()
     {
