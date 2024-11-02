@@ -1,3 +1,4 @@
+using AlzaApp.Core;
 using AlzaApp.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +8,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddLogging();
 
-builder.Services.InjectPersistenceDependencies(builder.Configuration);
+builder.Services
+       .InjectCoreDependencies()
+       .InjectPersistenceDependencies(builder.Configuration);
 
 var app = builder.Build();
 
@@ -19,4 +22,4 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.Run();
+await app.RunAsync();
