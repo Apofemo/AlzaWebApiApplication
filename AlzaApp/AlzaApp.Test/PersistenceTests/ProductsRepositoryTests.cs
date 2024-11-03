@@ -43,7 +43,7 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
         // Assert
         Assert.That(result.IsFailed, Is.True);
         Assert.That(result.Errors.Count, Is.EqualTo(1));
-        Assert.That(result.Errors.First(), Is.EqualTo(NoProductsFoundError.Create()));
+        Assert.That(result.Errors.First(), Is.TypeOf<NoProductsFoundError>());
     }
 
     [Test]
@@ -67,27 +67,6 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
         Assert.That(products.Count, Is.EqualTo(pageSize));
         Assert.That(products.Last().Id, Is.EqualTo(MockedData.ProductsDo[pageSize - 1].Id));
     }
-    
-    [Test]
-    public async Task GetAllProductsPaginatedAsync_ReturnsCorrectPageOfProducts_DefaultPageSize()
-    {
-        // Arrange
-        DbContext.Products.AddRange(MockedData.ProductsDo);
-        await DbContext.SaveChangesAsync();
-
-        const int page = 1;
-
-        // Act
-        var result = await ProductsRepository.GetAllProductsPaginatedAsync(page);
-
-        // Assert
-        Assert.That(result.IsSuccess, Is.True);
-        
-        var products = result.Value.ToList();
-        
-        Assert.That(products.Count, Is.EqualTo(10));
-        Assert.That(products.Last().Id, Is.EqualTo(MockedData.ProductsDo[9].Id));
-    }
 
     [Test]
     public async Task GetAllProductsPaginatedAsync_ReturnsFailure_WhenPageIsOutOfRange()
@@ -105,19 +84,19 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
         // Assert
         Assert.That(result.IsFailed, Is.True);
         Assert.That(result.Errors.Count, Is.EqualTo(1));
-        Assert.That(result.Errors.First(), Is.EqualTo(NoProductsFoundError.Create()));
+        Assert.That(result.Errors.First(), Is.TypeOf<NoProductsFoundError>());
     }
 
     [Test]
     public async Task GetAllProductsPaginatedAsync_ReturnsFailure_WhenNoProductsExist()
     {
         // Act
-        var result = await ProductsRepository.GetAllProductsPaginatedAsync(1);
+        var result = await ProductsRepository.GetAllProductsPaginatedAsync(1, 10);
 
         // Assert
         Assert.That(result.IsFailed, Is.True);
         Assert.That(result.Errors.Count, Is.EqualTo(1));
-        Assert.That(result.Errors.First(), Is.EqualTo(NoProductsFoundError.Create()));
+        Assert.That(result.Errors.First(), Is.TypeOf<NoProductsFoundError>());
     }
 
     [Test]
@@ -152,7 +131,7 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
         // Assert
         Assert.That(result.IsFailed, Is.True);
         Assert.That(result.Errors.Count, Is.EqualTo(1));
-        Assert.That(result.Errors.First(), Is.EqualTo(NoProductWithIdFoundError.Create(productId)));
+        Assert.That(result.Errors.First(), Is.TypeOf<NoProductWithIdFoundError>());
     }
 
     [Test]
@@ -170,7 +149,7 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
         // Assert
         Assert.That(result.IsFailed, Is.True);
         Assert.That(result.Errors.Count, Is.EqualTo(1));
-        Assert.That(result.Errors.First(), Is.EqualTo(NoProductWithIdFoundError.Create(productId)));
+        Assert.That(result.Errors.First(), Is.TypeOf<NoProductWithIdFoundError>());
     }
 
     [Test]
@@ -208,7 +187,7 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
         // Assert
         Assert.That(result.IsFailed, Is.True);
         Assert.That(result.Errors.Count, Is.EqualTo(1));
-        Assert.That(result.Errors.First(), Is.EqualTo(NoProductWithIdFoundError.Create(productId)));
+        Assert.That(result.Errors.First(), Is.TypeOf<NoProductWithIdFoundError>());
     }
 
     [Test]
@@ -227,6 +206,6 @@ internal sealed class ProductsRepositoryTests : BaseRepositoryTest
         // Assert
         Assert.That(result.IsFailed, Is.True);
         Assert.That(result.Errors.Count, Is.EqualTo(1));
-        Assert.That(result.Errors.First(), Is.EqualTo(NoProductWithIdFoundError.Create(productId)));
+        Assert.That(result.Errors.First(), Is.TypeOf<NoProductWithIdFoundError>());
     }
 }

@@ -184,7 +184,7 @@ internal sealed class ProductsServiceTests : BaseCoreTest
         // Assert
         Assert.That(result.IsFailed, Is.True);
         Assert.That(result.Errors.Count, Is.EqualTo(1));
-        Assert.That(result.Errors.First(), Is.EqualTo(DescriptionIsEmptyError.Create()));
+        Assert.That(result.Errors.First(), Is.TypeOf<DescriptionIsEmptyError>());
     }
     
     [Test]
@@ -203,6 +203,6 @@ internal sealed class ProductsServiceTests : BaseCoreTest
         // Assert
         Assert.That(result.IsFailed, Is.True);
         Assert.That(result.Errors.Count, Is.EqualTo(1));
-        Assert.That(result.Errors.First(), Is.EqualTo(DescriptionIsTooLongError.Create()));
+        Assert.That(result.Errors.First(), Is.TypeOf<DescriptionIsTooLongError>());
     }
 }

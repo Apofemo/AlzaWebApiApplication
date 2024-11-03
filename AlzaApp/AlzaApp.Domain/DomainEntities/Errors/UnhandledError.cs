@@ -1,20 +1,20 @@
 using FluentResults;
 
-namespace AlzaApp.Domain.DomainEntities.Errors.Persistence;
+namespace AlzaApp.Domain.DomainEntities.Errors;
 
-public sealed record NoProductsFoundError : IError
+public sealed record UnhandledError : IError
 {
     public string Message { get; private init; } = string.Empty;
     public Dictionary<string, object> Metadata { get; private init; } = [];
     public List<IError> Reasons => [];
     
-    public static NoProductsFoundError Create() => new()
+    public static UnhandledError Create() => new()
     {
-        Message = "No products found.",
+        Message = "Please try again later or contact our support.",
         
         Metadata = new()
         {
-            { nameof(ErrorCode), ErrorCode.NotFound }
+            { nameof(ErrorCode), ErrorCode.InternalServerError }
         }
     };
 }

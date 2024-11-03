@@ -12,7 +12,13 @@ public static class DependencyInjector
     {
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"));
+            options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"), options =>
+            {
+                options.EnableRetryOnFailure(
+                    maxRetryCount: 3,
+                    maxRetryDelay: TimeSpan.FromSeconds(10),
+                    errorNumbersToAdd: []);
+            });
         });
 
         services.AddAutoMapper(typeof(MappingProfile));

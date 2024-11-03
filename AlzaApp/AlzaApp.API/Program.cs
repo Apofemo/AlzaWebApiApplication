@@ -7,7 +7,11 @@ using Asp.Versioning;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+if (builder.Environment.IsDevelopment());
+{
+    builder.Services.AddSwaggerGen();
+}
 
 builder.Services.AddLogging();
 
@@ -39,7 +43,8 @@ var versionSet = app.NewApiVersionSet()
 var groupBuilder = app.MapGroup("api/v{apiVersion:apiVersion}")
                       .WithApiVersionSet(versionSet);
 
-groupBuilder.MapProductEndpoints();
+groupBuilder.MapProductEndpointsV1()
+            .MapProductEndpointsV2();
 
 if (app.Environment.IsDevelopment())
 {
