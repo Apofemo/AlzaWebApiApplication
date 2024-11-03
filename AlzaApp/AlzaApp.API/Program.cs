@@ -7,11 +7,7 @@ using Asp.Versioning;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-
-if (builder.Environment.IsDevelopment());
-{
-    builder.Services.AddSwaggerGen();
-}
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddLogging();
 

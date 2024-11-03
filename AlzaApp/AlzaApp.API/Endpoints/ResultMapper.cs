@@ -3,9 +3,9 @@ using FluentResults;
 
 namespace AlzaApp.API.Endpoints;
 
-public static class ResultMapper
+internal static class ResultMapper
 {
-    public static IResult ToHttpResult<TValue>(this FluentResults.IResult<TValue> result)
+    internal static IResult ToHttpResult<TValue>(this FluentResults.IResult<TValue> result)
     {
         if (result.IsSuccess)
             return Results.Ok(result.Value);
