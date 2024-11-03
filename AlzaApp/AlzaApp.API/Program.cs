@@ -39,7 +39,8 @@ var versionSet = app.NewApiVersionSet()
 var groupBuilder = app.MapGroup("api/v{apiVersion:apiVersion}")
                       .WithApiVersionSet(versionSet);
 
-groupBuilder.MapProductEndpoints();
+groupBuilder.MapProductEndpointsV1()
+            .MapProductEndpointsV2();
 
 if (app.Environment.IsDevelopment())
 {

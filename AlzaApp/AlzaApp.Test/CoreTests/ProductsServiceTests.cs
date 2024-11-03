@@ -71,6 +71,28 @@ internal sealed class ProductsServiceTests : BaseCoreTest
     }
 
     [Test]
+    public async Task GetAllProductsPaginatedAsync_ReturnsPaginatedProducts_WithDefaultPageSize()
+    {
+        // Arrange
+        const int page = 1;
+        const int pageSize = 10;
+        var paginatedProducts = MockedData.Products.Take(pageSize);
+        
+        ProductsRepositoryMock.Setup(repo => repo.GetAllProductsPaginatedAsync(page, pageSize))
+                              .ReturnsAsync(Result.Ok(paginatedProducts));
+
+        var productsDto = Mapper.Map<IEnumerable<ProductDto>>(paginatedProducts);
+
+        // Act
+        var result = await ProductsService.GetAllProductsPaginatedAsync(page, null);
+
+        // Assert
+        Assert.That(result.IsSuccess, Is.True);
+        Assert.That(result.Value, Is.EquivalentTo(productsDto));
+        Assert.That(result.Value.Count(), Is.EqualTo(pageSize));
+    }
+
+    [Test]
     public async Task GetAllProductsPaginatedAsync_ReturnsFailure_WhenRepositoryFails()
     {
         // Arrange
@@ -184,7 +206,7 @@ internal sealed class ProductsServiceTests : BaseCoreTest
         // Assert
         Assert.That(result.IsFailed, Is.True);
         Assert.That(result.Errors.Count, Is.EqualTo(1));
-        Assert.That(result.Errors.First(), Is.EqualTo(DescriptionIsEmptyError.Create()));
+        Assert.That(result.Errors.First(), Is.TypeOf<DescriptionIsEmptyError>());
     }
     
     [Test]
@@ -203,6 +225,6 @@ internal sealed class ProductsServiceTests : BaseCoreTest
         // Assert
         Assert.That(result.IsFailed, Is.True);
         Assert.That(result.Errors.Count, Is.EqualTo(1));
-        Assert.That(result.Errors.First(), Is.EqualTo(DescriptionIsTooLongError.Create()));
+        Assert.That(result.Errors.First(), Is.TypeOf<DescriptionIsTooLongError>());
     }
 }

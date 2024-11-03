@@ -22,7 +22,7 @@ internal sealed class ProductsRepository(
             : Result.Ok(mapper.Map<IEnumerable<Product>>(products));
     }
 
-    public async Task<Result<IEnumerable<Product>>> GetAllProductsPaginatedAsync(int page, int pageSize = 10)
+    public async Task<Result<IEnumerable<Product>>> GetAllProductsPaginatedAsync(int page, int pageSize)
     {
         var products = await dbContext.Products
                                       .AsNoTracking()
