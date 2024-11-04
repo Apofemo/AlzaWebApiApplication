@@ -47,6 +47,8 @@ This project follows a **Contextual** naming for entities. This approach enhance
 - `Domain Entity`: Used for communicating within the application
   - **Product** for business logic related to products.
 
+As an example of usage, **ProductDo** additionally includes the *CreatedAt* and *UpdatedAt* properties, which are necessary to track creation and modification at the database level. In contrast, the **Product** domain entity includes only the *UpdatedAt* property, focusing on data related to business logic. **ProductDto**, on the other hand, completely excludes these properties because they are not needed for customer interaction. 
+
 ## Endpoints Description
 Also available from the swagger page `/swagger`.
 
